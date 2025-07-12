@@ -2,6 +2,7 @@ package com.example.car_selling.utils;
 
 
 import com.example.car_selling.entity.User;
+import com.example.car_selling.enums.UserRole;
 import com.example.car_selling.repositories.UserRepository;
 
 import io.jsonwebtoken.Claims;
@@ -31,11 +32,17 @@ public class JWTUtils {
     private static final String SECRET_KEY="dfasdfadfdjhflkashdfkjasdhlfkjasdhfadsfasdf";
 
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+        User user = (User) userDetails;
+        Map<String, Object> extraClaim = new HashMap<>();
+        extraClaim.put("role", user.getUserRole().name());
+        return generateToken(extraClaim, userDetails);
     }
 
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return Jwts.builder().claims(extraClaims).subject(userDetails.getUsername())
+
+        return Jwts.builder().claims(extraClaims)
+                .subject(userDetails.getUsername())
+                .claims(extraClaims)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
                 .signWith((SecretKey) getSigningKey())
