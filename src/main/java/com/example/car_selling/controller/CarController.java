@@ -32,11 +32,30 @@ public class CarController {
         }
     }
 
-    @GetMapping("/get-car")
+    @GetMapping("/cars")
     public ResponseEntity<List<CarResponse>> getCars(){
         return ResponseEntity.ok(customerService.getAllCars());
     }
 
+    @GetMapping("/car/{id}")
+    public ResponseEntity<CarResponse> getCarById(@PathVariable Long id){
+        return ResponseEntity.ok(customerService.getCarById(id));
+    }
 
+    @DeleteMapping("/car/{id}")
+    public ResponseEntity<Void> deleteCar(@PathVariable Long id){
+        customerService.deleteCar(id);
+        return ResponseEntity.ok(null);
+    }
+
+    @PutMapping("/car/{id}")
+    public ResponseEntity<?> updateCar(@PathVariable Long id,@ModelAttribute CarDTO carDTO){
+        boolean updated = customerService.updateCar(id, carDTO);
+        if(updated){
+            return ResponseEntity.ok("Updated");
+        }else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed");
+        }
+    }
 
 }

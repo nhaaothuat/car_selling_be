@@ -8,6 +8,8 @@ import com.example.car_selling.entity.User;
 import com.example.car_selling.mapper.CustomerMapper;
 import com.example.car_selling.repositories.CarRepository;
 import com.example.car_selling.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -46,6 +48,40 @@ public class CustomerSeviceImpl implements CustomerService{
     @Override
     public List<CarResponse> getAllCars() {
         return carRepository.findAll().stream().map(customerMapper::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public CarResponse getCarById(Long id) {
+        return carRepository.findById(id)
+                .map(customerMapper::toDTO).orElse(null);
+    }
+
+    @Override
+    public void deleteCar(Long id) {
+        if(!carRepository.existsById(id)) throw new EntityNotFoundException("Not found id "+ id);
+        carRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public boolean updateCar(Long id, CarDTO carDTO) {
+        return carRepository.findById(id).map(existingCar -> {
+
+            customerMapper.updateCarFromDTO(carDTO, existingCar);
+
+
+            MultipartFile newImg = carDTO.getImg();
+            if (newImg != null && !newImg.isEmpty()) {
+                try {
+                    existingCar.setImg(newImg.getBytes());
+                } catch (IOException e) {
+                    throw new RuntimeException("Failed to update image", e);
+                }
+            }
+
+            carRepository.save(existingCar);
+            return true;
+        }).orElse(false);
     }
 
 

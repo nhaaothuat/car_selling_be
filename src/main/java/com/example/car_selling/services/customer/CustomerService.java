@@ -10,4 +10,11 @@ public interface CustomerService {
     boolean createCar(CarDTO carDTO);
 
     List<CarResponse> getAllCars();
+
+    CarResponse getCarById(Long id);
+
+    void deleteCar(Long id);
+
+
+    boolean updateCar(Long id, CarDTO carDTO);
 }

@@ -27,6 +27,10 @@ public interface CustomerMapper {
         return null;
     }
 
+    @Mapping(target = "img",source = "img",qualifiedByName = "multipartToBytes")
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateCarFromDTO(CarDTO carDTO,@MappingTarget Car car);
+
 
     @Mapping(source = "user.id",target = "userId")
     CarResponse toDTO(Car car);
