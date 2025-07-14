@@ -3,6 +3,7 @@ package com.example.car_selling.controller;
 
 import com.example.car_selling.dto.CarDTO;
 import com.example.car_selling.dto.CarResponse;
+import com.example.car_selling.dto.SearchCarDTO;
 import com.example.car_selling.services.customer.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -58,4 +60,13 @@ public class CarController {
         }
     }
 
+    @PostMapping("/car/search")
+    public ResponseEntity<List<CarResponse>> searchCars(@RequestBody SearchCarDTO searchCarDTO){
+        return ResponseEntity.ok(customerService.searchCar(searchCarDTO));
+    }
+
+    @GetMapping("/cars/{id}")
+    public ResponseEntity<List<CarResponse>> getMyCars(@PathVariable UUID id){
+        return ResponseEntity.ok(customerService.getMyCars(id));
+    }
 }

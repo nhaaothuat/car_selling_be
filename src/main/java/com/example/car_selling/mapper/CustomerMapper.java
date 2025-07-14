@@ -3,6 +3,7 @@ package com.example.car_selling.mapper;
 
 import com.example.car_selling.dto.CarDTO;
 import com.example.car_selling.dto.CarResponse;
+import com.example.car_selling.dto.SearchCarDTO;
 import com.example.car_selling.entity.Car;
 import com.example.car_selling.entity.User;
 import org.mapstruct.*;
@@ -34,5 +35,8 @@ public interface CustomerMapper {
 
     @Mapping(source = "user.id",target = "userId")
     CarResponse toDTO(Car car);
+
+    Car toEntity(SearchCarDTO searchCarDTO);
+
 }
 
